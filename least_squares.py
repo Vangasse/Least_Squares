@@ -7,7 +7,7 @@ Created on Tue Aug 20 15:03:34 2019
 
 import numpy as np
 
-N = 500
+N = 10
 ny = 3
 nu = 3
 
@@ -28,9 +28,25 @@ for k in range(ny, N):
 noisy_y = y + noise
 
 #geração da matriz P
-j = nu
-P = []
-for i in range(ny, 10):
-    line = [y[i], y[i-1], y[i-2], u[j], u[j-1], u[j-2]]
+j = nu-1
+P = np.empty((0,6))
+for i in range(ny-1, N):
+    line = np.array([y[i], y[i-1], y[i-2], u[j], u[j-1], u[j-2]])
     j += 1
-    P.append(line)
+    P = np.append(P, [line], axis = 0)
+
+P_transpose = P.transpose()
+
+
+
+
+
+
+
+
+
+
+
+
+
+

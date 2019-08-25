@@ -7,7 +7,7 @@ Created on Tue Aug 20 15:03:34 2019
 
 import numpy as np
 
-N = 5
+N = 10
 ny = 3
 nu = 3
 
@@ -32,19 +32,27 @@ noisy_y = y + noise
 #geração da matriz P
 j = nu-1
 P = np.empty((0,6))
-for i in range(ny-1, N):
+for i in range(ny-1, N-1):
     line = np.array([y[i], y[i-1], y[i-2], u[j], u[j-1], u[j-2]])
     j += 1
     P = np.append(P, [line], axis = 0)
 
+################   construindo T    ######################
+#P'
 P_transpose = P.transpose()
+#P'*P
+product_P_transpose_P = P_transpose.dot(P)
+#inv(P'*P), pptp(product_P_transpose_P)
+pptp_inv = np.linalg.inv(product_P_transpose_P)
+#inv(P'*P)*P'
+T = pptp_inv.dot(P_transpose)
+#inv(P'*P)*P'*y(ny+1:end)
+T = T.dot(y[ny:])
 
-print (P)
-print (P_transpose)
-
-print (P_transpose.dot(P))
-
-
+'''
+print(P)
+print(T)
+print(y)
 
 
 

@@ -29,25 +29,24 @@ for k in range(ny, N):
 #aplicação de ruído
 noisy_y = y + noise
 
-#geração da matriz P
+#geração da matriz Phi - matriz de medidas (observações)
 j = nu-1
-P = np.empty((0,6))
+phi = np.empty((0,6))
 for i in range(ny-1, N-1):
     line = np.array([y[i], y[i-1], y[i-2], u[j], u[j-1], u[j-2]])
     j += 1
-    P = np.append(P, [line], axis = 0)
-
-################   construindo T    ######################
-#P'
-P_transpose = P.transpose()
-#P'*P
-product_P_transpose_P = P_transpose.dot(P)
-#inv(P'*P), pptp(product_P_transpose_P)
-pptp_inv = np.linalg.inv(product_P_transpose_P)
-#inv(P'*P)*P'
-T = pptp_inv.dot(P_transpose)
-#inv(P'*P)*P'*y(ny+1:end)
-T = T.dot(y[ny:])
+    phi = np.append(phi, [line], axis = 0)
+# construindo a matriz Teta_estimado - matriz com os coeficientes da entrada e da saída
+#Phi'
+phi_transpose = phi.transpose()
+#Phi'*Phi
+product_phi_transpose_phi = phi_transpose.dot(phi)
+#inv(phi'*phi), pptp(product_phi_transpose_phi)
+product_phi_transpose_phi_inv = np.linalg.inv(product_phi_transpose_phi)
+#inv(Phi'*Phi)*Phi'
+teta_est = product_phi_transpose_phi_inv.dot(phi_transpose)
+#inv(Phi'*Phi)*Phi'*y(ny+1:end)
+teta_est = teta_est.dot(y[ny:])
 
 ############ Ordem 1 #################
 N1 = 10
@@ -55,23 +54,23 @@ ny1 = 1
 nu1 = 1
 
 j = nu1-1
-P1 = np.empty((0, nu1 + ny1))
+phi1 = np.empty((0, nu1 + ny1))
 for i in range(ny1-1, N1-1):
     line = np.array([noisy_y[i], u[j]])
     j += 1
-    P1 = np.append(P1, [line], axis = 0)
+    phi1 = np.append(phi1, [line], axis = 0)
 
-P1t = P1.transpose()
-#P1'*P1
-prod_P1_P1t = P1t.dot(P1)
-#inv(P'*P), ppt1p1(product_P1t_P1)
-ppt1p1_inv = np.linalg.inv(prod_P1_P1t)
-#inv(P1'*P1)*P1'
-T1 = ppt1p1_inv.dot(P1t)
-#inv(P1'*P1)*P1'*y(ny+1:end)
-T1 = T1.dot(noisy_y[ny1:])
+phi1_t = phi1.transpose()
+#phi1'*phi1
+product_phi1_phi1_t = phi1_t.dot(phi1)
+#inv(phi'*phi), ppt1phi_1(product_phi_1t_phi_1)
+product_phi1_t_phi1_inv = np.linalg.inv(product_phi1_phi1_t)
+#inv(phi1'*phi1)*phi1'
+teta1_est = product_phi1_t_phi1_inv.dot(phi1_t)
+#inv(phi1'*phi1)*phi1'*y(ny+1:end)
+teta1_est = teta1_est.dot(noisy_y[ny1:])
 
-y_est1 = P1.dot(T1)
+y_est1 = phi1.dot(teta1_est)
 y_est1 = np.append(noisy_y[0:ny1], y_est1, axis = 0)
 
 
@@ -86,26 +85,23 @@ ny2 = 2
 nu2 = 2
 
 j = nu2-1
-P2 = np.empty((0, nu2 + ny2))
+phi2 = np.empty((0, nu2 + ny2))
 for i in range(ny2-1, N2-1):
     line = np.array([noisy_y[i], noisy_y[i-1], u[j], u[j - 1]])
     j += 1
-    P2 = np.append(P2, [line], axis = 0)
+    phi2 = np.append(phi2, [line], axis = 0)
 
-P2t = P2.transpose()
-#P2'*P2
-prod_P2_P2t = P2t.dot(P2)
+phi2_t = phi2.transpose()
+#phi2'*phi2
+product_phi2_phi2_t = phi2_t.dot(phi2)
+#inv(phi2'*phi2), ppt2phi2(product_phi2_t_phi2)
+product_phi2_t_phi2_inv = np.linalg.inv(product_phi2_phi2_t)
+#inv(phi2'*phi2)*phi2'
+teta2_est = product_phi2_t_phi2_inv.dot(phi2_t)
+#inv(phi2'*phi2)*phi2'*y(ny+1:end)
+teta2_est = teta2_est.dot(noisy_y[ny2:])
 
-#inv(P'*P), ppt2p2(product_P2t_P2)
-ppt2p2_inv = np.linalg.inv(prod_P2_P2t)
-
-#inv(P2'*P2)*P2'
-T2 = ppt2p2_inv.dot(P2t)
-
-#inv(P1'*P1)*P1'*y(ny+1:end)
-T2 = T2.dot(noisy_y[ny2:])
-
-y_est2 = P2.dot(T2)
+y_est2 = phi2.dot(teta2_est)
 y_est2 = np.append(noisy_y[0:ny2], y_est2, axis = 0)
 
 erro2 = noisy_y - y_est2
@@ -121,19 +117,19 @@ ny3 = 3
 nu3 = 3
 
 j = nu3-1
-P3 = np.empty((0, nu3 + ny3))
+phi3 = np.empty((0, nu3 + ny3))
 for i in range(ny3-1, N3-1):
     line = np.array([noisy_y[i], noisy_y[i-1], noisy_y[i-2], u[j], u[j - 1], u[j - 2]])
     j += 1
-    P3 = np.append(P3, [line], axis = 0)
+    phi3 = np.append(phi3, [line], axis = 0)
 
-P3t = P3.transpose()
-prod_P3_P3t = P3t.dot(P3)
-ppt3p3_inv = np.linalg.inv(prod_P3_P3t)
-T3 = ppt3p3_inv.dot(P3t)
-T3 = T3.dot(noisy_y[ny3:])
+phi3_t = phi3.transpose()
+product_phi3_phi3_t = phi3_t.dot(phi3)
+product_phi3_t_phi3_inv = np.linalg.inv(product_phi3_phi3_t)
+teta3_est = product_phi3_t_phi3_inv.dot(phi3_t)
+teta3_est = teta3_est.dot(noisy_y[ny3:])
 
-y_est3 = P3.dot(T3)
+y_est3 = phi3.dot(teta3_est)
 y_est3 = np.append(noisy_y[0:ny3], y_est3, axis = 0)
 
 erro3 = noisy_y - y_est3
@@ -147,19 +143,19 @@ ny4 = 4
 nu4 = 4
 
 j = nu4-1
-P4= np.empty((0, nu4 + ny4))
+phi4 = np.empty((0, nu4 + ny4))
 for i in range(ny4-1, N4-1):
     line = np.array([noisy_y[i], noisy_y[i-1], noisy_y[i-2], noisy_y[i-3], u[j], u[j - 1], u[j - 2], u[j - 3]])
     j += 1
-    P4 = np.append(P4, [line], axis = 0)
+    phi4 = np.append(phi4, [line], axis = 0)
 
-P4t = P4.transpose()
-prod_P4_P4t = P4t.dot(P4)
-ppt4p4_inv = np.linalg.inv(prod_P4_P4t)
-T4 = ppt4p4_inv.dot(P4t)
-T4 = T4.dot(noisy_y[ny4:])
+phi4_t = phi4.transpose()
+product_phi4_phi4_t = phi4_t.dot(phi4)
+product_phi4_t_phi4_inv = np.linalg.inv(product_phi4_phi4_t)
+teta4_est = product_phi4_t_phi4_inv.dot(phi4_t)
+teta4_est = teta4_est.dot(noisy_y[ny4:])
 
-y_est4 = P4.dot(T4)
+y_est4 = phi4.dot(teta4_est)
 y_est4 = np.append(noisy_y[0:ny4], y_est4, axis = 0)
 
 erro4 = noisy_y - y_est4
@@ -173,19 +169,19 @@ ny5 = 5
 nu5 = 5
 
 j = nu5-1
-P5 = np.empty((0, nu5 + ny5))
+phi5 = np.empty((0, nu5 + ny5))
 for i in range(ny5-1, N5-1):
     line = np.array([noisy_y[i], noisy_y[i-1], noisy_y[i-2], noisy_y[i-3], noisy_y[i-4], u[j], u[j - 1], u[j - 2], u[j - 3], u[j - 4]])
     j += 1
-    P5 = np.append(P5, [line], axis = 0)
+    phi5 = np.append(phi5, [line], axis = 0)
 
-P5t = P5.transpose()
-prod_P5_P5t = P5t.dot(P5)
-ppt5p5_inv = np.linalg.inv(prod_P5_P5t)
-T5 = ppt5p5_inv.dot(P5t)
-T5 = T5.dot(noisy_y[ny5:])
+phi5_t = phi5.transpose()
+product_phi5_phi5_t = phi5_t.dot(phi5)
+product_phi5_t_phi5_inv = np.linalg.inv(product_phi5_phi5_t)
+teta5_est = product_phi5_t_phi5_inv.dot(phi5_t)
+teta5_est = teta5_est.dot(noisy_y[ny5:])
 
-y_est5 = P5.dot(T5)
+y_est5 = phi5.dot(teta5_est)
 y_est5 = np.append(noisy_y[0:ny5], y_est5, axis = 0)
 
 erro5 = noisy_y - y_est5

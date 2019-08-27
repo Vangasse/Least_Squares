@@ -1,5 +1,10 @@
 """
 ARX algorithm
+
+1- Start defining order(n);
+2- Program will read from file "dados_1.csv";
+3- Number of Samples is set by data;
+4- Function arx is called at bottom.
 """
 ###################### Order and Samples ######################
 N=10
@@ -82,7 +87,7 @@ if DEBUG:
         y = np.append(y, -0.5*y[k-1] - 0.3*y[k-2] + 0.09*y[k-3] + 8.3*u[k-1] + 1.7*u[k-2] - 5.2*u[k-3])
 
 ###################### Resulting Array of Parameters ######################
-theta = arx(u,y,3,len(y))
+theta = arx(u,y,n,len(y))
 print(theta)
 
 

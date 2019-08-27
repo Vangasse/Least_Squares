@@ -1,6 +1,6 @@
 import numpy as np
 
-n = 2 #Ordem do sistema
+n = 3 #Ordem do sistema
 N = 100 #Nº de amostras
 u = np.random.uniform(low=-1, high=1, size=(N,1))
 y = np.empty((0,1))

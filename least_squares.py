@@ -60,13 +60,13 @@ for i in range(ny1-1, N1-1):
     j += 1
     phi1 = np.append(phi1, [line], axis = 0)
 
-phi1_t = phi1.transpose()
+phi1_transpose = phi1.transpose()
 #phi1'*phi1
-product_phi1_phi1_t = phi1_t.dot(phi1)
+product_phi1_phi1_transpose = phi1_transpose.dot(phi1)
 #inv(phi'*phi), ppt1phi_1(product_phi_1t_phi_1)
-product_phi1_t_phi1_inv = np.linalg.inv(product_phi1_phi1_t)
+product_phi1_transpose_phi1_inv = np.linalg.inv(product_phi1_phi1_transpose)
 #inv(phi1'*phi1)*phi1'
-teta1_est = product_phi1_t_phi1_inv.dot(phi1_t)
+teta1_est = product_phi1_transpose_phi1_inv.dot(phi1_transpose)
 #inv(phi1'*phi1)*phi1'*y(ny+1:end)
 teta1_est = teta1_est.dot(noisy_y[ny1:])
 
@@ -91,13 +91,13 @@ for i in range(ny2-1, N2-1):
     j += 1
     phi2 = np.append(phi2, [line], axis = 0)
 
-phi2_t = phi2.transpose()
+phi2_transpose = phi2.transpose()
 #phi2'*phi2
-product_phi2_phi2_t = phi2_t.dot(phi2)
-#inv(phi2'*phi2), ppt2phi2(product_phi2_t_phi2)
-product_phi2_t_phi2_inv = np.linalg.inv(product_phi2_phi2_t)
+product_phi2_phi2_transpose = phi2_transpose.dot(phi2)
+#inv(phi2'*phi2), ppt2phi2(product_phi2_transpose_phi2)
+product_phi2_transpose_phi2_inv = np.linalg.inv(product_phi2_phi2_transpose)
 #inv(phi2'*phi2)*phi2'
-teta2_est = product_phi2_t_phi2_inv.dot(phi2_t)
+teta2_est = product_phi2_transpose_phi2_inv.dot(phi2_transpose)
 #inv(phi2'*phi2)*phi2'*y(ny+1:end)
 teta2_est = teta2_est.dot(noisy_y[ny2:])
 
@@ -123,10 +123,10 @@ for i in range(ny3-1, N3-1):
     j += 1
     phi3 = np.append(phi3, [line], axis = 0)
 
-phi3_t = phi3.transpose()
-product_phi3_phi3_t = phi3_t.dot(phi3)
-product_phi3_t_phi3_inv = np.linalg.inv(product_phi3_phi3_t)
-teta3_est = product_phi3_t_phi3_inv.dot(phi3_t)
+phi3_transpose = phi3.transpose()
+product_phi3_phi3_transpose = phi3_transpose.dot(phi3)
+product_phi3_transpose_phi3_inv = np.linalg.inv(product_phi3_phi3_transpose)
+teta3_est = product_phi3_transpose_phi3_inv.dot(phi3_transpose)
 teta3_est = teta3_est.dot(noisy_y[ny3:])
 
 y_est3 = phi3.dot(teta3_est)
@@ -149,10 +149,10 @@ for i in range(ny4-1, N4-1):
     j += 1
     phi4 = np.append(phi4, [line], axis = 0)
 
-phi4_t = phi4.transpose()
-product_phi4_phi4_t = phi4_t.dot(phi4)
-product_phi4_t_phi4_inv = np.linalg.inv(product_phi4_phi4_t)
-teta4_est = product_phi4_t_phi4_inv.dot(phi4_t)
+phi4_transpose = phi4.transpose()
+product_phi4_phi4_transpose = phi4_transpose.dot(phi4)
+product_phi4_transpose_phi4_inv = np.linalg.inv(product_phi4_phi4_transpose)
+teta4_est = product_phi4_transpose_phi4_inv.dot(phi4_transpose)
 teta4_est = teta4_est.dot(noisy_y[ny4:])
 
 y_est4 = phi4.dot(teta4_est)
@@ -175,10 +175,10 @@ for i in range(ny5-1, N5-1):
     j += 1
     phi5 = np.append(phi5, [line], axis = 0)
 
-phi5_t = phi5.transpose()
-product_phi5_phi5_t = phi5_t.dot(phi5)
-product_phi5_t_phi5_inv = np.linalg.inv(product_phi5_phi5_t)
-teta5_est = product_phi5_t_phi5_inv.dot(phi5_t)
+phi5_transpose = phi5.transpose()
+product_phi5_phi5_transpose = phi5_transpose.dot(phi5)
+product_phi5_transpose_phi5_inv = np.linalg.inv(product_phi5_phi5_transpose)
+teta5_est = product_phi5_transpose_phi5_inv.dot(phi5_transpose)
 teta5_est = teta5_est.dot(noisy_y[ny5:])
 
 y_est5 = phi5.dot(teta5_est)

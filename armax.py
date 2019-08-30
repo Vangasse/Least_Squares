@@ -14,7 +14,7 @@ DEBUG = False
 import numpy as np
 import pandas as pd
 
-def arx(u, y, n, N):
+def armax(u, y, n, N):
     e = np.random.uniform(low=-0.05, high= 0.05, size=(N,1))
     for it in range(100):
         MSE = 0

@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 
 def arx(u, y, n, N):
+    N = len(y)
     ###################### Phi Construction ######################
     # Inicialização da matriz phi
     phi = np.empty((N-n,0))
@@ -87,7 +88,7 @@ if DEBUG:
         y = np.append(y, -0.5*y[k-1] - 0.3*y[k-2] + 0.09*y[k-3] + 8.3*u[k-1] + 1.7*u[k-2] - 5.2*u[k-3])
 
 ###################### Resulting Array of Parameters ######################
-theta = arx(u,y,n,len(y))
+theta = arx(u,y,n)
 print(theta)
 
 

@@ -14,7 +14,7 @@ DEBUG = False
 import numpy as np
 import pandas as pd
 
-def arx(u, y, n, N):
+def arx(u, y, n):
     N = len(y)
     ###################### Phi Construction ######################
     # Inicialização da matriz phi

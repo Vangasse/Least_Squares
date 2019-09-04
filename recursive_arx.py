@@ -9,7 +9,7 @@ ARX algorithm
 ###################### Order and Samples ######################
 N=10
 n=3
-DEBUG = False
+DEBUG = True
 
 import numpy as np
 import pandas as pd
@@ -44,10 +44,22 @@ def genRegMatrix(u, y, n):
     
 
 
-def arx(u, y, n):
+def recursive_arx(u, y, n, l):
+    N = len(y)
+    ###################### Setting Parameters ######################
+    #Regressor Matrix
     phi = genRegMatrix(u, y, n)
-    ###################### Minimum Squares Procedure ######################
-    phi_t = phi.transpose()
+    #Covariance Matrix
+    P = np.identity(n*2)*10000
+    #System Parameters
+    theta = np.random.uniform(low=-1, high=1, size=(n*2, 1))
+    ###################### Recursive Procedure ######################
+    for i in range(N-n):
+        K = P.dot(phi[i,:].transpose())/(phi[i,:].dot(P)).dot(phi[i,:].transpose()) + l
+        theta = theta + K*(y[i+n] - phi[i,:].dot(theta))
+        #P = (1/l)*(P - ((P.dot(phi[i,:].transpose()).dot(phi[i,:])).dot(P))/((phi[i,:].dot(P)).dot(phi[i,:].transpose())))
+        print(K.shape, theta.shape)
+    """phi_t = phi.transpose()
     phi_pseudo_inverse = (np.linalg.inv(phi_t.dot(phi))).dot(phi_t)
     theta_est = phi_pseudo_inverse.dot(y[n:])
     
@@ -69,7 +81,7 @@ def arx(u, y, n):
     print("MSE: "+str(MSE))
     print("COEEF: "+str(COEEF))
     
-    return theta_est
+    return theta_est"""
 
 
 ###################### File Reading ######################
@@ -87,5 +99,6 @@ if DEBUG:
         y = np.append(y, -0.5*y[k-1] - 0.3*y[k-2] + 0.09*y[k-3] + 8.3*u[k-1] + 1.7*u[k-2] - 5.2*u[k-3])
 
 ###################### Resulting Array of Parameters ######################
-theta = arx(u,y,n)
+#lambda = 0.97
+theta = recursive_arx(u,y,n, 0.97)
 print(theta)

@@ -24,7 +24,7 @@ for i = 3:4
         theta = rand(ordem*2,1);
         thetas = theta;
         
-        for k = 1:N-ordem
+        for k = 1:N*ordem
             K = P*phi(k,:)'/(phi(k,:)*P*phi(k,:)'+lambda);
             theta = theta + K*(y(k+ordem) - phi(k,:)*theta);
             P = (1/lambda) * (P - (P*phi(k,:)'*phi(k,:)*P)/(phi(k,:)*P*phi(k,:)'+lambda));

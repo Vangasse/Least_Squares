@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 ARX algorithm
 
@@ -41,16 +42,9 @@ def arx(u, y, n):
         phi = np.hstack((phi, u_column))                # Adiciona o array coluna na matriz phi
     
     ###################### Minimum Squares Procedure ######################
-    # Phi_T
-    phi_transpose = phi.transpose()
-    # Phi * Phi_T
-    product_phi_phi_transpose = phi_transpose.dot(phi)
-    # (Phi * Phi_T)'
-    product_phi_transpose_phi_inv = np.linalg.inv(product_phi_phi_transpose)
-    # Theta = (Phi * Phi_T)' * Phi_T
-    theta_est = product_phi_transpose_phi_inv.dot(phi_transpose)
-    # Theta = (Phi * Phi_T)' * Phi_T * Y
-    theta_est = theta_est.dot(y[n:])
+    phi_t = phi.transpose()
+    phi_pseudo_inverse = (np.linalg.inv(phi_t.dot(phi))).dot(phi_t)
+    theta_est = phi_pseudo_inverse.dot(y[n:])
     
     ###################### Model Evaluation ######################
     y_est = phi.dot(theta_est)

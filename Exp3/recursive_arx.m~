@@ -16,20 +16,13 @@ lambda = 0.97;
 phi = montaMatReg(order, y, u, true, 0); % Matriz de regressores
 
 P = eye(order*2)*10000;
-theta = [
-    0.5916;
-    0.3326;
-    0.8531;
-    0.4424;
-    0.9044;
-    0.0332]
+theta = 
 %theta = rand(order*2,1);
 thetas = theta;
 
 for k = 1:N-order
     K = P*phi(k,:)'/(phi(k,:)*P*phi(k,:)'+lambda);
     theta = theta + K*(y(k+order) - phi(k,:)*theta);
-    A = P - (P*phi(k,:)'*phi(k,:)*P)/(phi(k,:)*P*phi(k,:)'+lambda);
     P = (1/lambda) * (P - (P*phi(k,:)'*phi(k,:)*P)/(phi(k,:)*P*phi(k,:)'+lambda));
     thetas = [thetas theta];
     

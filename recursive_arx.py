@@ -9,7 +9,7 @@ ARX algorithm
 ###################### Order and Samples ######################
 N=500
 n=3
-DEBUG = True
+DEBUG = False
 
 import numpy as np
 import pandas as pd
@@ -50,12 +50,16 @@ def recursive_arx(u, y, n, l):
     ###################### Setting Parameters ######################
     #Regressor Matrix
     phi = genRegMatrix(u, y, n)
+    #print (phi)
     #Covariance Matrix
-    P = np.identity(n*2)*10000000
+    P = np.identity(n*2)*10000
     #System Parameters
-    theta_est = np.random.uniform(low=-1, high=1, size=(n*2, 1))
+    theta_est = np.array([0.5916, 0.3326, 0.8531, 0.4424, 0.9044, 0.0332]).reshape(2*n,1)
+    #print(theta_est.shape)
+    #theta_est = np.random.uniform(low=-1, high=1, size=(n*2, 1))
     ###################### Recursive Procedure ######################
-    for i in range(N-n):
+    """N-n"""
+    for i in range(3):
         row_phi = phi[i,:].reshape(1, 2*n)
         row_phi_transpose = row_phi.transpose()
 
@@ -68,11 +72,12 @@ def recursive_arx(u, y, n, l):
         theta_est = theta_est + K*(y[i+n] - row_phi.dot(theta_est))
         #print(theta_est)
         #time.sleep(2)
-        den_P = row_phi.dot(P).dot(row_phi_transpose) + l
-        num_P = P - P.dot(row_phi_transpose).dot(row_phi).dot(P)
+        den_P = ((row_phi.dot(P)).dot(row_phi_transpose)) + l
+        num_P = P - ((P.dot(row_phi_transpose)).dot(row_phi)).dot(P)
+        print((den_P))
         P = (1/l)*(num_P/den_P)
         #print(P)
-        #time.sleep(2)
+        #time.sleep(10)
     """phi_t = phi.transpose()
     phi_pseudo_inverse = (np.linalg.inv(phi_t.dot(phi))).dot(phi_t)
     theta_est = phi_pseudo_inverse.dot(y[n:])
@@ -115,4 +120,4 @@ if DEBUG:
 
 ###################### Resulting Array of Parameters ######################
 theta = recursive_arx(u,y,n, 0.97)#lambda = 0.97
-print(theta)
+#print(theta)

@@ -5,18 +5,17 @@ ARX algorithm
 1- Start defining order(n);
 2- Program will read from file "dados_1.csv";
 3- Number of Samples is set by data;
-4- Function arx is called at bottom.
+4- Function arx is called at bottom;
+5- DEBUG is set True for testing only.
 """
 ###################### Order and Samples ######################
-N=10
 n=3
 DEBUG = False
 
 import numpy as np
 import pandas as pd
 
-def arx(u, y, n):
-    N = len(y)
+def arx(u, y, n, N):
     ###################### Phi Construction ######################
     # Inicialização da matriz phi
     phi = np.empty((N-n,0))
@@ -25,7 +24,7 @@ def arx(u, y, n):
     de acordo com seus limites e adicionadas à mesma através da função
     hstack(numpy).
     """
-    # colunas de y:
+    #Output columns:
     for j in range(n):
         y_column = np.array([])
         for k in range(n - (j + 1), N - (j + 1)):
@@ -33,7 +32,7 @@ def arx(u, y, n):
         y_column = y_column.reshape(len(y_column), 1)   # Transforma o array linha em coluna
         phi = np.hstack((phi, y_column))                # Adiciona o array coluna na matriz phi
     
-    # colunas de u
+    #Input columns:
     for j in range(n):
         u_column = np.array([])
         for k in range(n - (j + 1), N - (j + 1)):
@@ -78,11 +77,11 @@ u = data_matrix[:,1]
 if DEBUG:
     y = np.empty((0,1))
     y = np.append(y, n*[0])
-    for k in range(n, N):
+    for k in range(n, len(u)):
         y = np.append(y, -0.5*y[k-1] - 0.3*y[k-2] + 0.09*y[k-3] + 8.3*u[k-1] + 1.7*u[k-2] - 5.2*u[k-3])
 
 ###################### Resulting Array of Parameters ######################
-theta = arx(u,y,n)
+theta = arx(u,y,n,len(y))
 print(theta)
 
 
